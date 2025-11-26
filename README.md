@@ -6,14 +6,17 @@ This repository contains code for fitting zero-inflated beta-binomial phylogenet
 
 ### Purpose
 
-Cancer counts across species show strong overdispersion and many zero values. Simple binomial models and non phylogenetic models do not fit these data.
+The standard binomial model shows severe overdispersion when applied to cross-species cancer data. This extra variance is not only due to differences in necropsy numbers but also to phylogenetic structure, excess zeros, ecological factors, and unmeasured biological differences across species.
 
-This workflow uses
+This workflow uses a zero-inflated beta-binomial model with an explicit overdispersion parameter that can capture the excess variance in the data and account for extra zeros, sampling differences, and phylogenetic relatedness across species. The model includes
 
-* a beta binomial distribution to handle extra variation  
-* a zero inflation component to model extra zeros  
-* a phylogenetic random effect for shared ancestry  
-* life history predictors to test associations with cancer risk  
+a beta-binomial distribution to handle overdispersion
+
+a zero-inflation component to model extra zeros
+
+a phylogenetic random effect for shared ancestry
+
+life history predictors to test associations with cancer risk 
 
 ### Response and trials
 

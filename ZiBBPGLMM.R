@@ -41,7 +41,7 @@ zi_mode_global <- "log_trials"
 # Clean species names, match species between the data and the tree, and prune both accordingly.
 ###################################################################################################
 
-setwd("C: ... Path to the folder that includes the data and tree...your results will also be saved here ...")
+setwd("C: ... Path to the folder that includes the data and tree...your results will also be saved here in a folder ...")
 
 dat_raw <- read.csv("Compton_data.csv", header = TRUE)   # load raw data
 
@@ -465,3 +465,4 @@ if (length(results_list) == 0) {
   out_csv <- file.path(out_dir, "BetaBinom_ZI_PGLMM_LHT_summary.csv")
   write.csv(results_all, out_csv, row.names = FALSE)
 }
+

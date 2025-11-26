@@ -28,59 +28,105 @@ The model uses a binomial-style structure
 Two responses should be modelled separately (see [Why Multivariate Model Would Not Work Here](#why-multivariate-model-would-not-work-here) below).
 
 * `NeoplasiaCases`  
-* `MalignancyCases`  
+* `MalignancyCases`
 
+## Model Structure
 ### Beta binomial component
 
-The beta-binomial component models the underlying cancer probability for each species. It includes a dispersion parameter `phi` that allows the variance to grow larger than in a simple binomial model.
+The beta-binomial component models the underlying cancer probability for each species. The dispersion parameter widens the variance beyond the binomial limit. A variance inflation factor (VIF) is calculated from this parameter to summarize how much additional variance is present relative to a binomial model.
 
-From `phi`, the script computes a custom variance inflation factor, which is an indicator of overdispersion (i.e., variance of beta binomial/variance of binomial)
+### Zero-Inflation Component
 
-* VIF shows how much wider the variance is relative to a binomial model  
-* VIF is based on `phi` and the median number of necropsies per species  
+Many zeros in the dataset cannot be explained by the beta-binomial variance alone. These extra zeros often reflect low sampling effort. Two zero-inflation modes are available:
 
-### Zero-inflation component
-
-The data contain more zero values than expected under the beta binomial variance. This is often due to low sampling effort for some species.
-
-The zero inflation part accounts for this and supports two modes
-
-* `zi ~ log_trials_s`  
-  * zero inflation depends on standardized log necropsy counts  
-  * species with fewer necropsies can have a higher probability of extra zeros  
-
-* `zi ~ 1`  
-  * a single global zero inflation level without covariates  
+- `zi ~ log_trials_s` to link zero inflation to standardized log necropsy counts  
+- `zi ~ 1` for a global zero-inflation level  
 
 The choice is controlled by the `zi_mode_global` setting in the script.
 
-### Predictors and life history traits
+### Life History Predictors
 
-Life history traits are used as predictors in the mean part of the model
+Life history traits are used as predictors in the mean model. These include:
 
-* body mass  
-* maximum longevity  
-* gestation length  
+- adult body mass  
+- maximum longevity  
+- gestation length  
 
-In the script these are
+They are log-transformed and standardized before modeling.
 
-* log transformed  
-* standardized to mean zero and unit variance  
+The workflow fits four predictor sets for each response:
 
-The code fits four predictor sets for each response
+1. mass only  
+2. longevity only  
+3. gestation only  
+4. all three traits together  
 
-* mass only  
-* longevity only  
-* gestation only  
-* all three traits together  
+### Phylogenetic Random Effect
 
-This allows direct comparison of single trait and multi trait models.
+Species are evolutionarily related and cannot be treated as independent. The workflow reads a phylogenetic tree, prunes it to species present in the data, constructs a correlation matrix under a Brownian motion model, and passes this matrix to the species-level random effect. This produces a proper phylogenetic generalized linear mixed model.
 
-### Phylogenetic random effect
+## Priors
 
-Species are not independent. Closely related species tend to have similar cancer probabilities.
+Weakly informative priors are used for:
 
-The script builds a phylogenetic covariance matrix `A` from the pruned tree using Brownian motion and uses it in a random effect term
+- intercepts in the mean and zero-inflation parts  
+- slopes for life history predictors  
+- the standard deviation of the species random effect  
+- the beta-binomial dispersion parameter  
+
+These priors stabilize estimation while remaining data driven.
+
+## Model Fitting
+
+The models are fitted in R with `brms` using the `zero_inflated_beta_binomial()` family. The workflow uses four chains and conservative sampler settings:
+
+- increased warmup  
+- `adapt_delta = 0.99`  
+- `max_treedepth = 14`  
+
+These settings reduce divergent transitions and improve convergence.
+
+## Diagnostics and Output
+
+For each fitted model, the workflow calculates:
+
+- posterior odds ratios with 95 percent credible intervals  
+- maximum Rhat values across all parameter groups  
+- the variance inflation factor summary  
+- the overdispersion statistic based on Pearson residuals  
+- a summary of the zero-inflation component  
+
+Output files include:
+
+- `summary_<model_label>_<response>.txt`  
+- `overdispersion_<model_label>_<response>.txt`  
+- `BetaBinom_ZI_PGLMM_LHT_summary.csv` summarizing all models  
+
+## Data Preparation and Tree Alignment
+
+Before modeling, the script:
+
+- reads `Zach_data.csv`  
+- cleans species names  
+- aligns species with the phylogenetic tree  
+- prunes the tree to the intersecting species  
+- reorders rows to match the tree tip order  
+- constructs log-transformed and standardized predictors  
+- constructs `log_trials_s` for zero-inflation  
+
+Only species with complete data for a given model are included.
+
+## Main Script Structure
+
+The main script defines the function `fit_lht_model()` which performs:
+
+- data subsetting and alignment  
+- formula construction for both the mean and zero-inflation parts  
+- model fitting via `brm`  
+- extraction of posterior summaries  
+- writing of output files  
+
+The script loops over all predictor sets and both responses. To run everything:
 
 ```r
-(1 | gr(Species, cov = A_model))
+source("your_script_name.R")

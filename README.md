@@ -1,6 +1,6 @@
 # Zero-Inflated Beta Binomial PGLMM for Analyzing the Cross-Species Cancer Data 
 
-This repository contains code for fitting zero-inflated beta binomial phylogenetic generalized linear mixed models for cancer data across species. The workflow is built to reanalyze the [Compton et al. 2024](https://doi.org/10.1158/2159-8290.CD-24-0573) dataset and model neoplasia and malignancy prevalence while accounting for overdispersion, excess zeros, various sampling efforts across species, and phylogenetic structure.
+This repository contains code for fitting zero-inflated beta binomial phylogenetic generalized linear mixed models for cancer data across species. The models are implemented in R using the brms package with the zero_inflated_beta_binomial() family. The workflow is built to reanalyze the [Compton et al. 2024](https://doi.org/10.1158/2159-8290.CD-24-0573) dataset and model neoplasia and malignancy prevalence while accounting for overdispersion, excess zeros, various sampling efforts across species, and phylogenetic structure.
 
 ## Model summary
 
@@ -17,26 +17,26 @@ This workflow uses
 
 ### Response and trials
 
-The model uses a binomial style structure
+The model uses a binomial-style structure
 
 * `cases` is the number of cancer cases in each species  
 * `Trials` is the number of necropsies in that species  
 
-Two responses are modelled separately
+Two responses are modelled separately (see below)
 
 * `NeoplasiaCases`  
 * `MalignancyCases`  
 
 ### Beta binomial component
 
-The beta binomial part models the underlying cancer probability for each species. It includes a dispersion parameter `phi` that allows the variance to be larger than in a simple binomial model.
+The beta-binomial component models the underlying cancer probability for each species. It includes a dispersion parameter `phi` that allows the variance to grow larger than in a simple binomial model.
 
-From `phi` the script computes a variance inflation factor
+From `phi`, the script computes a custom variance inflation factor, which is an indicator of overdispersion (i.e., variance of beta binomial/variance of binomial)
 
 * VIF shows how much wider the variance is relative to a binomial model  
 * VIF is based on `phi` and the median number of necropsies per species  
 
-### Zero inflation component
+### Zero-inflation component
 
 The data contain more zero values than expected under the beta binomial variance. This is often due to low sampling effort for some species.
 

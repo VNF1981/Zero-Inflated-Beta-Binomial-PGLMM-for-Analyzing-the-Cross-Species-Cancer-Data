@@ -152,7 +152,7 @@ Shared predictor effects, shared covariance, and shared zero inflation have no b
 **7. The two outcomes have different biological processes**  
 Neoplasia is shaped by general tumor initiation factors (e.g., mutation accumulation), while malignancy depends on invasion, metastasis, immune escape, and progression. Combining them forces the model to assume a shared covariance structure that does not fully match the actual biology.
 
-# The correct statistical structure is sequential, not multivariate.   
+The correct statistical structure is sequential, not multivariate.   
 If modeled together, the proper framework would be conditional: first model tumor occurrence, then model malignancy given neoplasia. A multivariate model does not capture this hierarchy.
 
 ## Why We Do Not Transform or Remove Outliers in a Beta-Binomial PGLMM

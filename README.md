@@ -10,13 +10,13 @@ The standard binomial model shows severe overdispersion when applied to cross-sp
 
 This workflow uses a zero-inflated beta-binomial model with an explicit overdispersion parameter that can capture the excess variance in the data and account for extra zeros, sampling differences, and phylogenetic relatedness across species. The model includes
 
-a beta-binomial distribution to handle overdispersion
+* a beta-binomial distribution to handle overdispersion
 
-a zero-inflation component to model extra zeros
+* a zero-inflation component to model extra zeros
 
-a phylogenetic random effect for shared ancestry
+* a phylogenetic random effect for shared ancestry
 
-life history predictors to test associations with cancer risk 
+* life history predictors to test associations with cancer risk 
 
 ### Response and trials
 

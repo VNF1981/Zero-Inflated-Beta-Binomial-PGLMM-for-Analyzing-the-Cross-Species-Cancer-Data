@@ -94,7 +94,7 @@ For each fitted model, the workflow calculates:
 - posterior odds ratios with 95 percent credible intervals  
 - maximum Rhat values across all parameter groups  
 - a custom variance inflation factor that summarizes **how much wider the actual variance is relative to what a standard binomial model could handle**. Please note that this is not the multicollinearity VIF commonly used in linear models and is calculated as `1 + (n_median − 1) / (phi + 1)`, which corresponds to `Var(beta-binomial) / Var(binomial)`.
-- **the formal overdispersion statistic `c`, calculated from Pearson residuals under a standard binomial assumption; this quantifies how severely overdispersed the data would be if a binomial model were used instead of a beta-binomial model**
+- the formal overdispersion statistic `c`, calculated from Pearson residuals under a standard binomial assumption; **this quantifies how severely overdispersed the data would be if a binomial model were used instead of a beta-binomial model**
 - a summary of the zero-inflation component  
 
 

@@ -128,7 +128,7 @@ The main script defines the function `fit_lht_model()` which performs:
 - extraction of posterior summaries  
 - writing of output files  
 
-### *NOTE: This script fits both simple models (single predictors) and the full multiple predictor model, and it runs each of them independently for the neoplasia and malignancy responses.*
+#### *This script fits both simple models (single predictors) and the full multiple predictor model, and it runs each of them independently for the neoplasia and malignancy responses.*
 
 ## Why Multivariate Model Would Not Work Here
 

@@ -25,7 +25,7 @@ The model uses a binomial-style structure
 * `cases` is the number of naoplasia or malignancy cases in each species  
 * `Trials` is the number of necropsies in that species  
 
-The two responses should be modelled separately (see [Why Multivariate Model Would Not Work Here](#why-multivariate-model-would-not-work-here) below).
+The two responses should be modelled separately (see [Why Multivariate Model Would Not Work Here](#Why-a-Multivariate-Model-Will-Not-Work-Here) below).
 
 * `NeoplasiaCases`  
 * `MalignancyCases`
@@ -130,7 +130,7 @@ The main script defines the function `fit_lht_model()` which performs:
 
 #### *This script fits both simple models (single predictors) and the full multiple predictor model, and it runs each of them independently for the neoplasia and malignancy responses.*
 
-## Why Multivariate Model Would Not Work Here
+## Why a Multivariate Model Will Not Work Here
 
 **1. The two response variables are not statistically independent**  
 Malignancy is a strict subset of neoplasia, which creates a deterministic dependency between the two responses. Multivariate models assume stochastic dependence, not deterministic ones, so modeling both outcomes jointly violates the core assumptions of multivariate modeling and mis-specifies the joint likelihood and covariance structure.

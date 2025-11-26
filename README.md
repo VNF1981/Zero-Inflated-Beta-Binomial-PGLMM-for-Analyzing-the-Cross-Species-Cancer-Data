@@ -101,14 +101,14 @@ For each fitted model, the workflow calculates:
 Output files include:
 
 - `summary_<model_label>_<response>.txt`  
-- `overdispersion_<model_label>_<response>.txt`  
+- `standard_binomial_overdispersion_<model_label>_<response>.txt`  
 - `BetaBinom_ZI_PGLMM_LHT_summary.csv` summarizing all models  
 
 ## Data Preparation and Tree Alignment
 
 Before modeling, the script:
 
-- reads `Zach_data.csv`  
+- reads `Compton_data.csv`  
 - cleans species names  
 - aligns species with the phylogenetic tree  
 - prunes the tree to the intersecting species  

@@ -1,12 +1,12 @@
 # Zero-Inflated Beta Binomial PGLMM for Analyzing the Cross-Species Cancer Data 
 
-This repository contains code for fitting zero-inflated beta-binomial phylogenetic generalized linear mixed models for cancer data across species. The models are implemented in R using the `brms` package with the `zero_inflated_beta_binomial()` family. The workflow is built to reanalyze the [Compton et al. 2024](https://doi.org/10.1158/2159-8290.CD-24-0573) dataset and model neoplasia and malignancy prevalence while accounting for overdispersion, excess zeros, variation in sampling effort across species, and phylogenetic structure.
+This repository contains code for fitting zero-inflated beta-binomial phylogenetic generalized linear mixed models for cancer data across species. The models are implemented in R using the `brms` package with the `zero_inflated_beta_binomial()` family. The workflow reanalyzes the [Compton et al. 2024](https://doi.org/10.1158/2159-8290.CD-24-0573) dataset and model neoplasia and malignancy prevalence while accounting for overdispersion, excess zeros, variation in sampling effort across species, and phylogenetic structure.
 
 ## Model summary
 
 ### Purpose
 
-The standard binomial model shows severe overdispersion when applied to cross-species cancer data. This extra variance is not only due to differences in necropsy numbers but also to phylogenetic structure, excess zeros, ecological factors, and unmeasured biological differences across species.
+The standard binomial model shows severe overdispersion when applied to current cross-species cancer data. This extra variance is not only limited to differences in necropsy numbers but also to innate inaccuracies in phylogenetic covariances, excess zeros, ecological and environmental factors, and other unmeasured biological differences across species.
 
 This workflow uses a zero-inflated beta-binomial model with an explicit overdispersion parameter that can capture the excess variance in the data and account for extra zeros, sampling differences, and phylogenetic relatedness across species. The model includes
 
@@ -22,10 +22,10 @@ This workflow uses a zero-inflated beta-binomial model with an explicit overdisp
 
 The model uses a binomial-style structure
 
-* `cases` is the number of cancer cases in each species  
+* `cases` is the number of naoplasia or malignancy cases in each species  
 * `Trials` is the number of necropsies in that species  
 
-Two responses should be modelled separately (see [Why Multivariate Model Would Not Work Here](#why-multivariate-model-would-not-work-here) below).
+The two responses should be modelled separately (see [Why Multivariate Model Would Not Work Here](#why-multivariate-model-would-not-work-here) below).
 
 * `NeoplasiaCases`  
 * `MalignancyCases`
@@ -39,7 +39,7 @@ The beta-binomial component models the underlying cancer probability for each sp
 
 Many zeros in the dataset cannot be explained by the beta-binomial variance alone. These extra zeros often reflect low sampling effort. Two zero-inflation modes are available:
 
-- `zi ~ log_trials_s` to link zero inflation to standardized log necropsy counts  
+- `zi ~ log_trials_s` to link zero inflation to standardized log necropsy counts (default mode) 
 - `zi ~ 1` for a global zero-inflation level  
 
 The choice is controlled by the `zi_mode_global` setting in the script.
@@ -58,12 +58,13 @@ The workflow fits four predictor sets for each response:
 
 1. mass only  
 2. longevity only  
-3. gestation only  
-4. all three traits together  
+3. gestation only (1-3 are simple regression models) 
+4. all three traits together (multiple regression model)  
 
 ### Phylogenetic Random Effect
 
-Species are evolutionarily related and cannot be treated as independent. The workflow reads a phylogenetic tree, prunes it to species present in the data, constructs a correlation matrix under a Brownian motion model, and passes this matrix to the species-level random effect. This produces a proper phylogenetic generalized linear mixed model.
+Because species are evolutionarily related through shared ancestry, their trait values cannot be treated as independent. The workflow reads a phylogenetic tree, prunes it to the species present in the data, constructs a variance-covariance matrix under a Brownian motion model, and passes this matrix to the species-level random effect. This produces a proper phylogenetic generalized linear mixed model.
+
 
 ## Priors
 
@@ -92,9 +93,10 @@ For each fitted model, the workflow calculates:
 
 - posterior odds ratios with 95 percent credible intervals  
 - maximum Rhat values across all parameter groups  
-- the variance inflation factor summary  
-- the overdispersion statistic based on Pearson residuals  
+- a custom variance inflation factor that summarizes how much wider the actual variance is relative to what a standard binomial model could handle. Please note that this is not the multicollinearity VIF commonly used in linear models and is calculated as `1 + (n_median − 1) / (phi + 1)`, which corresponds to `Var(beta-binomial) / Var(binomial)`.
+- the formal overdispersion statistic based on Pearson residuals  
 - a summary of the zero-inflation component  
+
 
 Output files include:
 

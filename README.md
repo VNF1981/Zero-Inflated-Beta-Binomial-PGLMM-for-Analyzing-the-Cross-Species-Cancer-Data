@@ -140,7 +140,7 @@ Neoplasia counts can be an order of magnitude larger than malignancy counts and 
 Neoplasia shows milder overdispersion, while malignancy is often extremely overdispersed (e.g., when using the full dataset or a subset of it). A multivariate model must link dispersion parameters and therefore forces an incorrect joint dispersion structure, which can cause non-convergence, parameter inflation, and unstable covariance estimates.
 
 **4. The phylogenetic signal may differ between neoplasia and malignancy**  
-Neoplasia may track general life-history traits, while malignancy may reflect deeper adaptations such as cancer resistance mechanisms. A shared phylogenetic random effect misrepresents these differences.
+Neoplasia may track general life-history traits, while malignancy may reflect deeper adaptations such as cancer resistance mechanisms (e.g., in elephants). A shared phylogenetic random effect misrepresents these differences.
 
 **5. Multivariate zero-inflation is biologically incorrect**  
 Zero inflation is not shared. A species can have many benign tumors and zero malignancies. Forcing a joint zero-inflation process assumes identical structural-zero mechanisms, which is false.
@@ -154,6 +154,20 @@ Neoplasia is shaped by general tumor initiation factors (e.g., mutation accumula
 
 # The correct statistical structure is sequential, not multivariate.   
 If modeled together, the proper framework would be conditional: first model tumor occurrence, then model malignancy given neoplasia. A multivariate model does not capture this hierarchy.
+
+## Why We Do Not Transform or Remove Outliers in a Beta-Binomial PGLMM
+
+**1. Outlier removal is unnecessary and harmful for discrete count data**  
+Outlier removal matters in Gaussian models where extreme values distort the mean and variance. In binomial and beta-binomial models, the response is bounded, discrete, and naturally includes many zeros or values near the boundaries. These are not statistical outliers. Removing species with high or low prevalence removes the real biological signal rather than noise.
+
+**2. Transformations do not apply to count-based responses**  
+Transforms like log, sqrt, Box-Cox, or arcsine are used for continuous responses to stabilize variance. They should not be applied to binomial counts or proportions because the distribution already accounts for boundedness and variance. Transforming counts breaks the likelihood and destroys interpretability. Predictors (such as body mass) may be transformed, but the response must remain untransformed.
+
+**3. Misconceptions come from using linear models on proportions**  
+Transformations and outlier filtering are common in linear models that treat prevalence as a continuous variable. In a beta-binomial PGLMM, the likelihood already handles overdispersion, boundedness, and skew. Zero inflation and phylogenetic structure absorb the remaining heterogeneity, making transformations unnecessary.
+
+**4. The real challenges in cancer data are structural, not outliers**  
+Issues such as overdispersion, phylogenetic correlation, excess zeros, and uneven sampling are inherent to cross-species cancer data. These are correctly handled by the dispersion parameter, the phylogenetic covariance matrix, and the zero-inflation component, and not by transforming the response or deleting observations.
 
 
 ```r

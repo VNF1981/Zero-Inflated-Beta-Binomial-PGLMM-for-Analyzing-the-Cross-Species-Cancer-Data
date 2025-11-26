@@ -1,10 +1,6 @@
-# Zero-Inflated-Beta-Binomial-PGLMM-for-Analyzing-the-Cross-Species-Cancer-Data
-A workflow for fitting zero-inflated beta binomial phylogenetic GLMMs that model cross species cancer data while handling overdispersion, excess zeros, sampling effort, and phylogenetic nonindependence.
+# Zero-Inflated Beta Binomial PGLMM for Analyzing the Cross-Species Cancer Data 
 
-# Zero Inflated Beta Binomial PGLMM  
-Cancer prevalence across species
-
-This repository contains code for fitting zero inflated beta binomial phylogenetic generalized linear mixed models for cancer data across species. The goal is to model neoplasia and malignancy prevalence while accounting for overdispersion, extra zeros, sampling effort, and phylogenetic structure.
+This repository contains code for fitting zero-inflated beta binomial phylogenetic generalized linear mixed models for cancer data across species. The workflow is built to reanalyze the [Compton et al. 2024](https://doi.org/10.xxxx/xxxxx) dataset and model neoplasia and malignancy prevalence while accounting for overdispersion, excess zeros, various sampling efforts across species, and phylogenetic structure.
 
 ## Model summary
 

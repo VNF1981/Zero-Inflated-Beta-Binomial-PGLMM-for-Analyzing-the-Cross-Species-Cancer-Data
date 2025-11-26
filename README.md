@@ -126,7 +126,35 @@ The main script defines the function `fit_lht_model()` which performs:
 - extraction of posterior summaries  
 - writing of output files  
 
-The script loops over all predictor sets and both responses. To run everything:
+# NOTE: The current script loops over all predictor sets and both responses. To run everything:
+
+
+## Why Multivariate Model Would Not Work Here
+
+**1. The two response variables are not statistically independent**  
+Malignancy is a strict subset of neoplasia, which creates a deterministic dependency between the two responses. Multivariate models assume stochastic dependence, not deterministic ones, so modeling both outcomes jointly violates the core assumptions of multivariate modeling and mis-specifies the joint likelihood and covariance structure.
+
+**2. The scale and variance of the counts differ**  
+Neoplasia counts can be an order of magnitude larger than malignancy counts and thus have a different dispersion level. A multivariate model assumes comparable variance scales and tries to estimate a shared covariance, random effects structure, and shared residual correlation. This assumes both responses operate on similar variance scales, which is false in the case of neoplasia and malignancy. 
+
+**3. Overdispersion differs between neoplasia and malignancy**  
+Neoplasia shows milder overdispersion, while malignancy is often extremely overdispersed (e.g., when using the full dataset or a subset of it). A multivariate model must link dispersion parameters and therefore forces an incorrect joint dispersion structure, which can cause non-convergence, parameter inflation, and unstable covariance estimates.
+
+**4. The phylogenetic signal may differ between neoplasia and malignancy**  
+Neoplasia may track general life-history traits, while malignancy may reflect deeper adaptations such as cancer resistance mechanisms. A shared phylogenetic random effect misrepresents these differences.
+
+**5. Multivariate zero-inflation is biologically incorrect**  
+Zero inflation is not shared. A species can have many benign tumors and zero malignancies. Forcing a joint zero-inflation process assumes identical structural-zero mechanisms, which is false.
+
+**6. Interpretation becomes incoherent**  
+Shared predictor effects, shared covariance, and shared zero inflation have no biological meaning when one variable is always less than the other. The model becomes impossible to interpret cleanly. For example, we cannot interpret correlations when one variable is always less than the other, or we cannot explain species with neoplasia > 0 but malignancy = 0.
+  
+
+**7. The two outcomes have different biological processes**  
+Neoplasia is shaped by general tumor initiation factors (e.g., mutation accumulation), while malignancy depends on invasion, metastasis, immune escape, and progression. Combining them forces the model to assume a shared covariance structure that does not fully match the actual biology.
+
+# The correct statistical structure is sequential, not multivariate.   
+If modeled together, the proper framework would be conditional: first model tumor occurrence, then model malignancy given neoplasia. A multivariate model does not capture this hierarchy.
+
 
 ```r
-source("your_script_name.R")

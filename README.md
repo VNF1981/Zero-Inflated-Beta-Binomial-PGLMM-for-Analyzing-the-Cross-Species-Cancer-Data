@@ -25,7 +25,7 @@ The model uses a binomial-style structure
 * `cases` is the number of cancer cases in each species  
 * `Trials` is the number of necropsies in that species  
 
-Two responses are modelled separately (see below)
+Two responses should be modelled separately (see [Why Multivariate Model Would Not Work Here](#why-multivariate-model-would-not-work-here) below).
 
 * `NeoplasiaCases`  
 * `MalignancyCases`  

@@ -33,7 +33,7 @@ The two responses should be modelled separately (see [Why Multivariate Model Wou
 ## Model Structure
 ### Beta binomial component
 
-The beta-binomial component models the underlying cancer probability for each species. The dispersion parameter widens the variance beyond the binomial limit. A variance inflation factor (VIF) is calculated from this parameter to summarize how much additional variance is present relative to a binomial model.
+The beta-binomial component models the underlying cancer probability for each species. The dispersion parameter widens the variance beyond the binomial limit. A custom variance inflation factor (VIF) is calculated from this parameter to summarize how much additional variance is present relative to a binomial model.
 
 ### Zero-Inflation Component
 

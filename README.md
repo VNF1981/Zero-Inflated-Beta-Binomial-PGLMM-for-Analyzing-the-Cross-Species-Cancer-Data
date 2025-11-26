@@ -126,7 +126,7 @@ The main script defines the function `fit_lht_model()` which performs:
 - extraction of posterior summaries  
 - writing of output files  
 
-# NOTE: The current script loops over all predictor sets and both responses. To run everything:
+### NOTE: The current script loops over all predictor sets and both responses. To run everything:
 
 
 ## Why Multivariate Model Would Not Work Here

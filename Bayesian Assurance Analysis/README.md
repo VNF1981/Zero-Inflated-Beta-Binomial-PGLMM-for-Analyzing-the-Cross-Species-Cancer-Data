@@ -101,12 +101,11 @@ ape
 phytools
 ```
 
-A quick package check can be run with:
+A quick check to confirm that the required packages are available in your active R or conda environment can be run with:
 ```bash
 Rscript -e 'packages <- c("brms","rstan","tidyverse","ape","phytools","MASS"); print(sapply(packages, requireNamespace, quietly=TRUE))'
 ```
-
-All packages should return `TRUE`.
+*** All packages should return `TRUE`.
 
 On Monsoon, this library path may need to be exported before running the script:
 

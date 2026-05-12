@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains an R script for running a Bayesian assurance analysis for a fitted zero inflated beta binomial phylogenetic generalized linear mixed model.
+This repository contains an R script for running a Bayesian assurance analysis for a fitted ZiBBPGLMM.
 
 The goal of this analysis is to evaluate whether the current dataset and model structure are capable of detecting a body mass effect of different assumed sizes.
 

@@ -346,7 +346,7 @@ eta_mu <- eta_mu + beta_mass * mass_s
 
 Then it adds a simulated phylogenetic random effect.
 
-Finally, the script converts the linear predictor to probability scale:
+Finally, the script converts the linear predictor (i.e., logit scale) to probability scale:
 
 ```r
 mu <- plogis(eta_mu)
@@ -386,37 +386,29 @@ This step creates simulated case counts that are consistent with:
 
 ```text
 the observed number of trials
-the assumed true body mass effect
+the assumed true body mass effect (e.g., 0.1, 0.3, 0.5, etc)
 the fitted overdispersion level
 the fitted zero inflation structure
 the fitted phylogenetic variance
 ```
-
 The observed cancer counts are not manually changed. They are replaced by newly simulated counts in each simulation.
 
 ### Step 13. Refit the same Bayesian model
-
 For each simulated dataset, the script refits the same model structure:
-
 ```r
 cases | trials(Trials) ~ mass_s + longevity_s + gestation_s + (1 | gr(Species, cov = A_model))
 zi ~ log_trials_s
 ```
-
 The model is refitted using `brms`.
 
 ### Step 14. Extract the posterior body mass effect
-
 After each refit, the script extracts posterior draws for:
-
 ```r
 b_mass_s
 ```
 
 ### Step 15. Calculate posterior support in the expected direction
-
 Because body mass is expected to have a positive effect, the script calculates:
-
 ```r
 mean(beta_draws > 0)
 ```
@@ -426,19 +418,15 @@ This is the posterior probability that the body mass effect is positive.
 ### Step 16. Classify the simulation as successful or not
 
 A simulation is counted as successful if:
-
 ```r
 Pr(beta_mass > 0) > 0.95
 ```
 
 Otherwise, it is counted as unsuccessful.
-
 If a model fails to fit, that simulation is recorded as missing and excluded from the assurance calculation.
 
 ### Step 17. Summarize assurance for each effect size
-
 For each assumed beta value, the script reports:
-
 ```text
 number of requested simulations
 number of valid simulations
@@ -449,9 +437,7 @@ median posterior probability
 ```
 
 ### Step 18. Save the results
-
 The script saves the final assurance table as:
-
 ```text
 Bayesian_assurance_body_mass_all_three_model.csv
 ```
@@ -463,7 +449,6 @@ Bayesian_assurance_body_mass_all_three_model.csv
 The predictor being tested.
 
 For the current script:
-
 ```text
 mass_s
 ```
@@ -473,79 +458,54 @@ mass_s
 The expected direction of the effect.
 
 For body mass:
-
 ```text
 positive
 ```
 
 ### assumed_beta
 
-The assumed true beta value used to simulate datasets.
-
-This is the effect size being tested.
+The assumed true beta value used to simulate datasets. This is the effect size being tested.
 
 ### assumed_OR
-
 The odds ratio corresponding to the assumed beta:
-
 ```r
 assumed_OR = exp(assumed_beta)
 ```
 
 ### n_sim_requested
-
 The number of simulations requested for that effect size.
 
 ### n_sim_valid
-
-The number of simulations that successfully finished.
-
-If this number is much lower than `n_sim_requested`, the assurance estimate may be less reliable.
+The number of simulations that successfully finished. If this number is much lower than `n_sim_requested`, the assurance estimate may be less reliable.
 
 ### n_success
-
 The number of valid simulations where the model detected the effect with high posterior probability.
 
 ### assurance
-
 The proportion of valid simulations that successfully detected the effect.
-
 ```r
 assurance = n_success / n_sim_valid
 ```
 
 ### posterior_prob_cutoff
-
-The posterior probability threshold used to define success.
-
-The default is:
-
+The posterior probability threshold used to define success. The default is:
 ```text
 0.95
 ```
 
 ### median_estimated_beta
-
 The median estimated beta across valid simulations.
-
 This can be compared with `assumed_beta`.
-
 If the median estimated beta is much smaller or larger than the assumed beta, the model may be biased under that simulation setting.
 
 ### median_posterior_prob
-
-The median posterior probability in the expected direction across valid simulations.
-
-For body mass, this is:
-
+The median posterior probability in the expected direction across valid simulations. For body mass, this is:
 ```r
 Pr(beta_mass > 0)
 ```
 
 ## How to interpret the final results
-
 A possible output might look like this:
-
 ```text
 assumed_beta    assumed_OR    assurance
 0.10            1.11          0.15
@@ -555,7 +515,6 @@ assumed_beta    assumed_OR    assurance
 ```
 
 This would mean:
-
 ```text
 A very small effect is difficult to detect.
 A moderate effect is detected sometimes.
@@ -565,186 +524,61 @@ A strong effect is detected with high reliability.
 
 The key interpretation is not whether one simulation is significant. The key interpretation is how often the model detects each assumed effect size across many simulated datasets.
 
-## Recommended wording for reporting the method
-
-A concise method description is:
-
-```text
-We performed a Bayesian assurance analysis to evaluate the ability of the current dataset and model structure to detect body mass effects of different assumed magnitudes. For each assumed beta value, we simulated cancer counts under the fitted zero inflated beta binomial phylogenetic model while preserving the observed trial counts, predictor values, zero inflation structure, and phylogenetic covariance matrix. We then refitted the same model to each simulated dataset and calculated assurance as the proportion of simulations in which the posterior probability for a positive body mass effect exceeded 0.95.
-```
-
-## Recommended wording for reporting results
-
-A concise result description is:
-
-```text
-Assurance increased with the assumed body mass effect size. This indicates that the current dataset and model structure have limited ability to detect small effects but stronger ability to detect moderate to large effects. Therefore, weak or uncertain posterior support for body mass in the empirical model should be interpreted in light of the model's limited assurance for small effect sizes.
-```
-
-Modify this wording based on the actual output values.
-
-## Running on Monsoon
-
-Example Slurm script:
-
-```bash
-#!/bin/bash
-
-#SBATCH --job-name=ZiBB_Assurance
-#SBATCH --cpus-per-task=4
-#SBATCH --time=48:00:00
-#SBATCH --mem=64G
-#SBATCH --output=./ZiBB_Assurance.out
-#SBATCH --error=./ZiBB_Assurance.err
-#SBATCH --mail-type=END,FAIL
-#SBATCH --mail-user=vn229@nau.edu
-
-export R_LIBS_USER=/scratch/vn229/Rlibs
-
-/packages/spack/1.1.0/var/spack/environments/r-2601/.spack-env/view/bin/Rscript 08_Bayesian_Assurance_Analysis_Monsoon_body_mass.R
-```
-
-Submit with:
-
-```bash
-sbatch run_assurance.sh
-```
-
 ## Computational notes
-
 The script is computationally expensive because it refits a full Bayesian model for each simulated dataset.
-
 The current body mass setup uses:
 
 ```text
-4 effect sizes × 100 simulations = 400 model refits
+5 effect sizes × 100 simulations = 500 model refits
 ```
 
-Each model refit uses MCMC sampling.
-
-For larger analyses, consider splitting the run across Slurm job arrays, for example one job per effect size.
+Each model refit uses MCMC sampling. 
+For larger analyses, I need to consider splitting the run across Slurm job arrays, for example one job per effect size.
 
 ## Changing the number of simulations
-
 To reduce runtime for testing, change:
-
 ```r
 n_sim_per_effect = 100
 ```
-
-to:
-
-```r
-n_sim_per_effect = 2
-```
-
-or:
-
-```r
-n_sim_per_effect = 5
-```
-
-For final analyses, use a larger number such as:
-
-```r
-n_sim_per_effect = 100
-```
-
-or more, depending on computational resources.
+to whatever number of simulations you have envisioned, depending on available computational resources.
 
 ## Changing the effect size grid
-
 To test different assumed body mass effects, edit:
-
 ```r
 effect_grid_positive <- c(0.1, 0.3, 0.5, 0.75)
 ```
 
 For example:
-
 ```r
-effect_grid_positive <- c(0.1, 0.2, 0.3, 0.5, 0.75, 0.95)
+effect_grid_positive <- c(0.1, 0.3, 0.6, 0.9)
 ```
-
 More effect sizes give a smoother assurance curve but increase runtime.
 
 ## Changing the target predictor
-
 The current target predictor is body mass:
-
 ```r
 target_predictor = "mass_s"
 ```
-
 To test longevity, use:
-
 ```r
 target_predictor = "longevity_s"
 direction = "positive"
 ```
 
 To test gestation, use:
-
 ```r
 target_predictor = "gestation_s"
 direction = "negative"
 effect_grid = effect_grid_negative
 ```
+NOTE: For traits expected to have negative associations with neoplasia or malignancy, such as gestation length, you should use negative input beta values. For example: -c(0.1, 0.3, 0.6, 0.9). If testing all traits, interpret each assurance result separately.
 
-If testing all traits, interpret each assurance result separately.
-
-## Troubleshooting
-
-### Packages are not found
-
-Make sure the personal R library is exported:
-
-```bash
-export R_LIBS_USER=/scratch/vn229/Rlibs
-```
-
-Then test:
-
-```bash
-Rscript -e 'packages <- c("brms","rstan","tidyverse","MASS"); print(sapply(packages, requireNamespace, quietly=TRUE))'
-```
-
-### The script cannot find the fitted model
-
-Make sure the main model has already been run and that this file exists:
-
-```text
-Zero_inflated_BetaBinom_PGLMM_LHT_Allspecies/fit_all_three_NeoplasiaCases_zi_log_trials.rds
-```
-
-### The script cannot find A.rds
-
-Make sure the main model script saved:
-
-```text
-A.rds
-```
-
-The main model script should include:
-
-```r
-saveRDS(A, file.path(out_dir, "A.rds"))
-```
-
-### Some simulations fail
-
-Some model refits may fail because Bayesian models can have convergence or sampling problems for certain simulated datasets.
-
+### What if some simulations fail?
+Some model refits may fail because Bayesian models can have convergence or sampling problems for certain simulated datasets. 
 The script records failed simulations as missing and reports:
-
 ```text
 n_sim_valid
 ```
 
-If many simulations fail, inspect the error file and consider testing with fewer simulations first.
-
 ## Summary
-
-This script performs a Bayesian assurance analysis for body mass effects in cross species cancer data. It varies the assumed true body mass beta, simulates datasets under the fitted model structure, refits the model to each simulated dataset, and estimates how often the model detects the effect with high posterior probability.
-
-The main output is an assurance value for each assumed effect size.
+This script performs a Bayesian assurance analysis for body mass effects in cross species cancer data. It varies the assumed true body mass beta, simulates datasets under the fitted model structure, refits the model to each simulated dataset, and estimates how often the model detects the effect with high posterior probability. The main output is an assurance value for each assumed effect size.

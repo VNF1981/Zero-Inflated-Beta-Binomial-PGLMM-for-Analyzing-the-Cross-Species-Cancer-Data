@@ -8,9 +8,7 @@ The goal of this analysis is to evaluate whether the current dataset and model s
 
 In simple terms, the script asks:
 
-```text
-If the true body mass effect were small, moderate, or large, how often would this model detect it using the data structure we currently have?
-```
+### If the true body mass effect were small, moderate, or large, how often would this model detect it using the data structure we currently have?
 
 The current version is set up to test the body mass effect while keeping longevity and gestation in the model as covariates.
 

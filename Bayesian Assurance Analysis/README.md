@@ -123,7 +123,7 @@ effect_grid_positive <- c(0.1, 0.3, 0.5, 0.7, 0.9)
 ```
 
 These values are on the log odds scale.
-Their approximate odds ratios are:
+Their approximate odds ratios (calculated as exp(x)) are:
 
 ```text
 beta = 0.10    OR = 1.11
@@ -131,7 +131,6 @@ beta = 0.30    OR = 1.35
 beta = 0.50    OR = 1.65
 beta = 0.75    OR = 2.12
 ```
-
 These effect sizes represent increasingly stronger assumed positive associations between body mass and cancer occurrence.
 
 ## Important terms
@@ -187,7 +186,9 @@ This means the probability of an excess zero depends on sampling effort.
 
 ### Phylogenetic random effect
 The script simulates a phylogenetic random effect using the covariance matrix `A_model`.
-This preserves the idea that related species are not statistically independent.
+This preserves the idea that related species are not statistically independent. 
+
+### NOTE: In this script, the phylogenetic covariance matrix is based on a Brownian motion model. If a different evolutionary framework is desired, such as Pagel's lambda, lambda should first be estimated and then applied to the off-diagonal elements of the phylogenetic variance-covariance matrix. The resulting VCV matrix should then be used in the simulations and model refitting steps.
 
 ### Posterior probability cutoff
 The current cutoff is:
@@ -218,52 +219,34 @@ library(tidyverse)
 ```
 
 `MASS` is used to simulate phylogenetic random effects from a multivariate normal distribution.
-
 `brms` and `rstan` are used to refit the Bayesian model.
-
 `tidyverse` is used for data manipulation and output formatting.
 
-### Step 2. Set the working directory and output directory
-
-The script is configured for Monsoon:
-
-```r
-setwd("/projects/tollis_lab/TE/mammals/ZiBBPGLMM")
-```
-
+### Step 2. 
 The output directory is:
-
 ```r
 Zero_inflated_BetaBinom_PGLMM_LHT_Allspecies
 ```
 
 ### Step 3. Load the fitted real model
-
 The script loads the fitted model from the real data:
-
 ```r
 fit_real <- readRDS(
   file.path(out_dir, "fit_all_three_NeoplasiaCases_zi_log_trials.rds")
 )
 ```
-
 This model is not being refitted at this step. It is used to extract realistic parameter values for simulation.
 
 ### Step 4. Load the cleaned data and phylogenetic covariance matrix
-
 The script loads:
-
 ```r
 dat_lht <- readRDS(file.path(out_dir, "dat_lht.rds"))
 A <- readRDS(file.path(out_dir, "A.rds"))
 ```
-
 These objects provide the species level data and phylogenetic covariance structure.
 
 ### Step 5. Recreate the model dataframe
-
 The script selects the columns needed for the assurance analysis:
-
 ```r
 Species
 Trials
@@ -273,37 +256,25 @@ longevity_s
 gestation_s
 NeoplasiaCases
 ```
-
 Then it renames the response column to:
-
 ```r
 cases
 ```
-
 The observed case counts are needed to build the dataframe, but the script later replaces them with simulated counts during each simulation.
 
 ### Step 6. Align the dataframe and covariance matrix
-
-The script makes sure that the species order in the dataframe matches the species order in the covariance matrix.
-
-This is essential because the phylogenetic covariance matrix must correspond exactly to the order of species in the model data.
+The script makes sure that the species order in the dataframe matches the species order in the covariance matrix. This is essential because the phylogenetic covariance matrix must correspond exactly to the order of species in the model data.
 
 ### Step 7. Define the effect size grid
-
 The script defines the assumed true body mass effects:
-
 ```r
 effect_grid_positive <- c(0.1, 0.3, 0.5, 0.75)
 ```
-
-The script will run simulations separately for each value.
+The script will then run simulations separately for each value.
 
 ### Step 8. Extract nuisance parameters from the fitted real model
-
 The script extracts posterior medians from `fit_real`.
-
 These include:
-
 ```text
 intercept_real
 phi_real
@@ -311,68 +282,46 @@ zi_intercept_real
 zi_log_trials_real
 sd_species_real
 ```
-
 These are called nuisance parameters because they are not the main target of the assurance analysis, but they are needed to simulate realistic data.
 
 ### Step 9. Start the loop over assumed effect sizes
-
-For each assumed beta value, the script runs a set number of simulations.
-
-The current default is:
-
+For each assumed beta value, the script runs a set number of simulations. The current default is:
 ```r
 n_sim_per_effect = 100
 ```
-
-With four effect sizes, this gives:
-
+With five effect sizes, this gives:
 ```text
-4 × 100 = 400 simulated model refits
+5 × 100 = 500 simulated model refits
 ```
 
 ### Step 10. Build the expected cancer probability
-
 For each simulation, the script starts with the real model intercept:
-
 ```r
 eta_mu <- intercept_real
 ```
-
 Then it adds the assumed body mass effect:
-
 ```r
 eta_mu <- eta_mu + beta_mass * mass_s
 ```
-
-Then it adds a simulated phylogenetic random effect.
-
-Finally, the script converts the linear predictor (i.e., logit scale) to probability scale:
-
+Then it adds a simulated phylogenetic random effect. Finally, the script converts the linear predictor (i.e., logit scale) to probability scale:
 ```r
 mu <- plogis(eta_mu)
 ```
 
 ### Step 11. Build the zero inflation probability
-
 If the zero inflation mode is:
-
 ```r
 zi_mode = "log_trials"
 ```
-
 then the script calculates:
-
 ```r
 eta_zi <- zi_intercept_real + zi_log_trials_real * log_trials_s
 zi_prob <- plogis(eta_zi)
 ```
-
 This gives the probability that each species belongs to the excess zero process.
 
 ### Step 12. Simulate new cancer counts
-
 The script simulates new cancer counts using:
-
 ```r
 simulate_zibb_counts(
   trials = Trials,
@@ -381,9 +330,7 @@ simulate_zibb_counts(
   zi_prob = zi_prob
 )
 ```
-
 This step creates simulated case counts that are consistent with:
-
 ```text
 the observed number of trials
 the assumed true body mass effect (e.g., 0.1, 0.3, 0.5, etc)
@@ -412,18 +359,14 @@ Because body mass is expected to have a positive effect, the script calculates:
 ```r
 mean(beta_draws > 0)
 ```
-
 This is the posterior probability that the body mass effect is positive.
 
 ### Step 16. Classify the simulation as successful or not
-
 A simulation is counted as successful if:
 ```r
 Pr(beta_mass > 0) > 0.95
 ```
-
-Otherwise, it is counted as unsuccessful.
-If a model fails to fit, that simulation is recorded as missing and excluded from the assurance calculation.
+Otherwise, it is counted as unsuccessful. If a model fails to fit, that simulation is recorded as missing and excluded from the assurance calculation.
 
 ### Step 17. Summarize assurance for each effect size
 For each assumed beta value, the script reports:
@@ -446,24 +389,18 @@ Bayesian_assurance_body_mass_all_three_model.csv
 
 ### target_predictor
 
-The predictor being tested.
-
-For the current script:
+The predictor being tested. For the current script:
 ```text
 mass_s
 ```
 
 ### direction
-
-The expected direction of the effect.
-
-For body mass:
+The expected direction of the effect. For body mass:
 ```text
 positive
 ```
 
 ### assumed_beta
-
 The assumed true beta value used to simulate datasets. This is the effect size being tested.
 
 ### assumed_OR
@@ -527,7 +464,6 @@ The key interpretation is not whether one simulation is significant. The key int
 ## Computational notes
 The script is computationally expensive because it refits a full Bayesian model for each simulated dataset.
 The current body mass setup uses:
-
 ```text
 5 effect sizes × 100 simulations = 500 model refits
 ```
@@ -545,12 +481,11 @@ to whatever number of simulations you have envisioned, depending on available co
 ## Changing the effect size grid
 To test different assumed body mass effects, edit:
 ```r
-effect_grid_positive <- c(0.1, 0.3, 0.5, 0.75)
+effect_grid_positive <- c(0.1, 0.3, 0.5, 0.7, 0.9)
 ```
-
 For example:
 ```r
-effect_grid_positive <- c(0.1, 0.3, 0.6, 0.9)
+effect_grid_positive <- c(0.1, 0.4, 0.9)
 ```
 More effect sizes give a smoother assurance curve but increase runtime.
 
@@ -571,7 +506,7 @@ target_predictor = "gestation_s"
 direction = "negative"
 effect_grid = effect_grid_negative
 ```
-NOTE: For traits expected to have negative associations with neoplasia or malignancy, such as gestation length, you should use negative input beta values. For example: -c(0.1, 0.3, 0.6, 0.9). If testing all traits, interpret each assurance result separately.
+NOTE: For traits expected to have negative associations with neoplasia or malignancy, such as gestation length, we need to use negative input beta values. For example: -c(0.1, 0.3, 0.6, 0.9). If testing all traits, interpret each assurance result separately.
 
 ### What if some simulations fail?
 Some model refits may fail because Bayesian models can have convergence or sampling problems for certain simulated datasets. 

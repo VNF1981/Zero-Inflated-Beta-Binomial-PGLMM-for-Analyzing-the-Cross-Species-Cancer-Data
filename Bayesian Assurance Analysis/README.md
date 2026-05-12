@@ -27,7 +27,10 @@ In this script, strong posterior support is defined as:
 Pr(beta_mass > 0) > 0.95
 ```
 
-because body mass is expected to have a positive association with cancer occurrence.
+because body mass is expected to have a positive association with cancer occurrence. Obviously, this can be negative for traits like gestation length, such as:
+```r
+Pr(beta_gestation < 0) > 0.95
+```
 
 The assurance value is the proportion of simulations in which the model successfully detects the assumed effect.
 

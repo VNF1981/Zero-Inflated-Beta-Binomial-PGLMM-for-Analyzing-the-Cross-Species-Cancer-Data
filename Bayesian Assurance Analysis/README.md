@@ -4,7 +4,7 @@
 
 This repository contains an R script for running a Bayesian assurance analysis for a fitted ZiBBPGLMM. The general idea for this simulation-based analysis is adapted from [bayesassurance](https://journal.r-project.org/articles/RJ-2023-066/) R package. 
 
-### *** I will soon expand this framework to Gompertzian models as well *** 
+### *** I will soon expand this framework to Gompertz models as well *** 
 
 The goal of this analysis is to evaluate whether the current dataset and model structure are capable of detecting a body mass effect of different assumed sizes.
 

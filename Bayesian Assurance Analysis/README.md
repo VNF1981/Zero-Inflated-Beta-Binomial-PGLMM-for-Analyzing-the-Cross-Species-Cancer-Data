@@ -14,7 +14,7 @@ In simple terms, the script asks:
 The current version is set up to test the body mass effect while keeping longevity and gestation in the model as covariates.
 
 ## What is Bayesian assurance?
-Bayesian assurance is similar in spirit to power analysis in the frequentist approaches, but it is framed in a Bayesian way.
+Bayesian assurance is similar in spirit to power analysis in the frequentist statistics, but it is framed in a Bayesian way.
 
 A traditional power analysis usually asks:
 - If an effect exists, how often would a statistical test reject the null hypothesis?
@@ -27,22 +27,20 @@ In this script, strong posterior support is defined as:
 Pr(beta_mass > 0) > 0.95
 ```
 
-because body mass is expected to have a positive association with cancer occurrence. Obviously, this can be negative for traits like gestation length, such as:
+This means that, for a given model fit, more than 95% of the posterior samples for the body mass coefficient must be greater than zero. In other words, the model must show strong posterior support that the body mass effect is positive. We say positive here because body mass is expected to have a positive association with cancer occurrence. Obviously, this can be negative for traits like gestation length, such as:
 ```r
 Pr(beta_gestation < 0) > 0.95
 ```
 
 The assurance value is the proportion of simulations in which the model successfully detects the assumed effect.
-
 For example:
-
 ```text
 100 simulated datasets
 80 have Pr(beta_mass > 0) > 0.95
 Assurance = 80 / 100 = 0.80
 ```
 
-means that the model detected the assumed effect in 80 percent of valid simulated datasets.
+This means the model successfully detected the assumed body mass effect in 80% of the simulated datasets.
 
 ## Main question addressed by this script
 

@@ -107,32 +107,22 @@ Rscript -e 'packages <- c("brms","rstan","tidyverse","ape","phytools","MASS"); p
 ```
 *** All packages should return `TRUE`.
 
-On Monsoon, this library path may need to be exported before running the script:
-
-```bash
-export R_LIBS_USER=/scratch/vn229/Rlibs
-```
-
 ## Script
 
 The main script is:
-
 ```text
-08_Bayesian_Assurance_Analysis_Monsoon_body_mass.R
+Bayesian_Assurance_Analysis.R
 ```
 
 This script is currently configured to run assurance for body mass only.
 
 ## Effect sizes tested
-
 The script tests a grid of assumed true body mass beta values:
-
 ```r
-effect_grid_positive <- c(0.1, 0.3, 0.5, 0.75)
+effect_grid_positive <- c(0.1, 0.3, 0.5, 0.7, 0.9)
 ```
 
 These values are on the log odds scale.
-
 Their approximate odds ratios are:
 
 ```text
@@ -147,114 +137,77 @@ These effect sizes represent increasingly stronger assumed positive associations
 ## Important terms
 
 ### Assumed true beta
-
 The assumed true beta is the effect size used to simulate new datasets.
-
 For example:
-
 ```r
 beta_mass = 0.5
 ```
-
 means that the simulation assumes a true positive body mass effect of 0.5 on the log odds scale.
 
 ### Target predictor
-
 The target predictor is the predictor being evaluated in the assurance analysis.
-
 In the current script:
-
 ```r
 target_predictor = "mass_s"
 ```
-
 This means the assurance analysis is focused on body mass.
 
 ### Non target predictors
-
 The model still includes all three predictors:
-
 ```r
 mass_s
 longevity_s
 gestation_s
 ```
-
-However, during simulation, only the target predictor is assigned the assumed effect size. The non target predictors are set to zero in the data generating process.
-
-This isolates the model's ability to detect the body mass effect.
+However, during simulation, only the target predictor is assigned the assumed effect size. The non target predictors are set to zero in the data generating process. This isolates the model's ability to detect the body mass effect.
 
 ### Trials
-
-`Trials` is the number of sampled individuals or necropsies for each species.
-
-The script keeps the observed trial counts fixed. This preserves the real sampling structure of the dataset.
+`Trials` is the number of sampled individuals or necropsies for each species. The script keeps the observed trial counts fixed. This preserves the real sampling structure of the dataset.
 
 ### Mu
-
-`mu` is the expected cancer probability for each species.
-
-The script calculates `mu` from the linear predictor:
-
+`mu` is the expected cancer probability for each species. The script calculates `mu` from the linear predictor:
 ```r
 eta_mu = intercept + beta_mass * mass_s + phylogenetic effect
 mu = plogis(eta_mu)
 ```
 
 ### Phi
+`phi` is the beta binomial overdispersion parameter. It controls the amount of overdispersion in the simulated cancer counts.
 
-`phi` is the beta binomial precision parameter.
-
-It controls the amount of overdispersion in the simulated cancer counts.
-
-Lower `phi` means more overdispersion.
-
-Higher `phi` means the model behaves more like a binomial model.
+- Lower `phi` means more overdispersion.
+- Higher `phi` means the model behaves more like a binomial model.
 
 ### Zero inflation probability
-
 The zero inflation probability is the probability that a species is assigned to the extra zero process.
-
 The default zero inflation model is:
-
 ```r
 zi ~ log_trials_s
 ```
-
 This means the probability of an excess zero depends on sampling effort.
 
 ### Phylogenetic random effect
-
 The script simulates a phylogenetic random effect using the covariance matrix `A_model`.
-
 This preserves the idea that related species are not statistically independent.
 
 ### Posterior probability cutoff
-
 The current cutoff is:
-
 ```r
 posterior_prob_cutoff = 0.95
 ```
 
 For body mass, a simulation is counted as successful if:
-
 ```r
 Pr(beta_mass > 0) > 0.95
 ```
 
 ### Assurance
-
 Assurance is the proportion of valid simulations that successfully detect the assumed effect.
-
 ```r
 assurance = n_success / n_sim_valid
 ```
 
 ## Step by step explanation of what the script does
-
 ### Step 1. Load packages
-
 The script loads the required packages:
 
 ```r

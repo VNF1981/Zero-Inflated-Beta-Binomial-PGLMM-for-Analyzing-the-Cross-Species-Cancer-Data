@@ -7,13 +7,11 @@ This repository contains an R script for running a Bayesian assurance analysis f
 The goal of this analysis is to evaluate whether the current dataset and model structure are capable of detecting a body mass effect of different assumed sizes.
 
 In simple terms, the script asks:
-
 #### If the true body mass effect were small, moderate, or large, how often would this model detect it using the data structure we currently have?
 
 The current version is set up to test the body mass effect while keeping longevity and gestation in the model as covariates.
 
 ## What is Bayesian assurance?
-
 Bayesian assurance is similar in spirit to power analysis in the frequentist approaches, but it is framed in a Bayesian way.
 
 A traditional power analysis usually asks:
@@ -23,7 +21,6 @@ Bayesian assurance asks:
 - If an effect of a given size exists, how often would the Bayesian model produce strong posterior support for that effect?
 
 In this script, strong posterior support is defined as:
-
 ```r
 Pr(beta_mass > 0) > 0.95
 ```

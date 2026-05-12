@@ -1,4 +1,4 @@
-# Zero Inflated Beta Binomial PGLMM and Bayesian Assurance Analysis
+# Bayesian Assurance Analysis for ZiBBPGLMM
 
 ## Overview
 

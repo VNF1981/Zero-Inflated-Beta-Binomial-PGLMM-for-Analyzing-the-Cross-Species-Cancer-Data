@@ -14,19 +14,13 @@ The current version is set up to test the body mass effect while keeping longevi
 
 ## What is Bayesian assurance?
 
-Bayesian assurance is similar in spirit to power analysis, but it is framed in a Bayesian way.
+Bayesian assurance is similar in spirit to power analysis in the frequentist approaches, but it is framed in a Bayesian way.
 
 A traditional power analysis usually asks:
-
-```text
-If an effect exists, how often would a statistical test reject the null hypothesis?
-```
+- If an effect exists, how often would a statistical test reject the null hypothesis?
 
 Bayesian assurance asks:
-
-```text
-If an effect of a given size exists, how often would the Bayesian model produce strong posterior support for that effect?
-```
+- If an effect of a given size exists, how often would the Bayesian model produce strong posterior support for that effect?
 
 In this script, strong posterior support is defined as:
 

@@ -37,7 +37,9 @@ The assurance value is the proportion of simulations in which the model successf
 For example:
 
 ```text
-assurance = 0.80
+100 simulated datasets
+80 have Pr(beta_mass > 0) > 0.95
+Assurance = 80 / 100 = 0.80
 ```
 
 means that the model detected the assumed effect in 80 percent of valid simulated datasets.

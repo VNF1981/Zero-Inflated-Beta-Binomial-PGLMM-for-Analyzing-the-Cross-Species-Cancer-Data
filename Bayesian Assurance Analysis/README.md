@@ -43,23 +43,15 @@ means that the model detected the assumed effect in 80 percent of valid simulate
 ## Main question addressed by this script
 
 The script evaluates the following question:
+- Given the current species, necropsy counts, predictor values, phylogenetic structure, and model specification, how reliably can we detect different assumed true body mass effects?
 
-```text
-Given the current species, necropsy counts, predictor values, phylogenetic structure, and model specification, how reliably can we detect different assumed true body mass effects?
-```
+The script does not manually alter the observed cancer counts. Instead, it changes the assumed true beta value for body mass. That beta changes the expected cancer probability for each species. The script then simulates new cancer counts from those expected probabilities under the zero inflated beta binomial model.
 
-The script does not manually alter the observed cancer counts.
-
-Instead, it changes the assumed true beta value for body mass. That beta changes the expected cancer probability for each species. The script then simulates new cancer counts from those expected probabilities under the zero inflated beta binomial model.
+### Because this analysis repeatedly refits full Bayesian models to simulated datasets, it is computationally time consuming. The full workflow is designed to run on a high performance computing cluster, such as Agave, Monsoon, or another Slurm based system. Running the full analysis on a local machine is not a good idea because it can take many hours and may be limited by CPU availability, memory, or thermal throttling.
 
 ## Required input files
-
-This script is designed to run after the main model has already been fitted.
-
-It requires output files from the fitted model analysis.
-
-The required files are:
-
+#### This script is designed to run after the main model has already been fitted.
+#### It requires output files from the fitted model analysis. The required files are:
 ```text
 Zero_inflated_BetaBinom_PGLMM_LHT_Allspecies/
 ├── fit_all_three_NeoplasiaCases_zi_log_trials.rds
@@ -68,26 +60,18 @@ Zero_inflated_BetaBinom_PGLMM_LHT_Allspecies/
 ```
 
 ### fit_all_three_NeoplasiaCases_zi_log_trials.rds
-
 This is the fitted Bayesian model object from the real data.
-
 The assurance script uses this object to extract realistic nuisance parameters, including:
-
 ```text
 intercept
 phi
 zero inflation parameters
 phylogenetic random effect standard deviation
 ```
-
 These values are used to simulate realistic datasets.
 
 ### dat_lht.rds
-
-This file contains the cleaned and transformed dataset used by the model.
-
-It includes:
-
+This file contains the cleaned and transformed dataset used by the model. It includes:
 ```text
 Species
 NeoplasiaCases
@@ -100,31 +84,24 @@ log_trials_s
 ```
 
 ### A.rds
-
 This file contains the phylogenetic covariance matrix aligned to the species in the dataset.
-
 It is used to simulate phylogenetically structured species effects and to refit the model with the same phylogenetic structure.
 
 ## Required R packages
-
 The assurance script requires:
-
 ```r
 brms
 rstan
 tidyverse
 MASS
 ```
-
 It also uses objects produced by the main model workflow, which requires packages such as:
-
 ```r
 ape
 phytools
 ```
 
 A quick package check can be run with:
-
 ```bash
 Rscript -e 'packages <- c("brms","rstan","tidyverse","ape","phytools","MASS"); print(sapply(packages, requireNamespace, quietly=TRUE))'
 ```

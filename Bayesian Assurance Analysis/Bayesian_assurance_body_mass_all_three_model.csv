@@ -1,0 +1,6 @@
+target_predictor,direction,assumed_beta,assumed_OR,n_sim_requested,n_sim_valid,n_success,assurance,posterior_prob_cutoff,median_estimated_beta,median_posterior_prob
+mass_s,positive,0.1,1.105170918,100,100,9,0.09,0.95,0.074921903,0.70475
+mass_s,positive,0.3,1.349858808,100,100,63,0.63,0.95,0.277167862,0.97875
+mass_s,positive,0.5,1.648721271,100,100,95,0.95,0.95,0.462436823,0.9995
+mass_s,positive,0.7,2.013752707,100,100,100,1,0.95,0.628127972,1
+mass_s,positive,0.9,2.459603111,100,100,100,1,0.95,0.816056736,1

@@ -49,7 +49,7 @@ The script evaluates the following question:
 
 The script does not manually alter the observed cancer counts. Instead, it changes the assumed true beta value for body mass. That beta changes the expected cancer probability for each species. The script then simulates new cancer counts from those expected probabilities under the zero inflated beta binomial model.
 
-### Because this analysis repeatedly refits full Bayesian models to simulated datasets, it is computationally time consuming. The full workflow is designed to run on a high performance computing cluster, such as Agave, Monsoon, or another Slurm based system. Running the full analysis on a local machine is not a good idea because it can take many hours and may be limited by CPU availability, memory, or thermal throttling.
+### Because this analysis repeatedly refits full Bayesian models to simulated datasets, it is computationally time consuming. The full workflow is designed to run on a high performance computing cluster, such as Monsoon or other Slurm based systems. Running the full analysis on a local machine is not a good idea because it can take many hours and may be limited by CPU availability, memory, or thermal throttling.
 
 ## Required input files
 #### This script is designed to run after the main model has already been fitted.

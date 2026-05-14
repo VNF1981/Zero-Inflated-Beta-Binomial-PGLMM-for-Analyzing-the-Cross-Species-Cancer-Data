@@ -62,7 +62,7 @@ Zero_inflated_BetaBinom_PGLMM_LHT_Allspecies/
 ```
 
 ### fit_all_three_NeoplasiaCases_zi_log_trials.rds
-This is the fitted Bayesian model object from the real data.
+This is the fitted Bayesian model object from the real data. 
 The assurance script uses this object to extract realistic nuisance parameters, including:
 ```text
 intercept
@@ -71,6 +71,8 @@ zero inflation parameters
 phylogenetic random effect standard deviation
 ```
 These values are used to simulate realistic datasets.
+
+*** This file is large so I could not upload it here but the following two files are provided ***
 
 ### dat_lht.rds
 This file contains the cleaned and transformed dataset used by the model. It includes:

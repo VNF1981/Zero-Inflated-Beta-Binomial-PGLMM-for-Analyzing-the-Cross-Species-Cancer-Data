@@ -537,3 +537,5 @@ These results should be interpreted as effect size dependent. There is not one s
 
 ## Summary
 This script performs a Bayesian assurance analysis for body mass effects in cross species cancer data. It varies the assumed true body mass beta, simulates datasets under the fitted model structure, refits the model to each simulated dataset, and estimates how often the model detects the effect with high posterior probability. The main output is an assurance value for each assumed effect size.
+
+## *** When running this script on a cluster, the analysis took approximately 20 hours to finish using 8 CPUs per task and 128 GB of memory ***  

@@ -116,7 +116,7 @@ The main script is:
 Bayesian_Assurance_Analysis.R
 ```
 
-## This script is currently configured to run assurance for body mass only.
+### *** This script is currently configured to run assurance for body mass and neoplasia analysis only ***
 
 ## Effect sizes tested
 The script tests a grid of assumed true body mass beta values:
@@ -133,7 +133,7 @@ beta = 0.30    OR = 1.35
 beta = 0.50    OR = 1.65
 beta = 0.75    OR = 2.12
 ```
-These effect sizes represent increasingly stronger assumed positive associations between body mass and cancer occurrence.
+These effect sizes represent increasingly stronger assumed positive associations between body mass and neoplasia occurrence.
 
 ## Important terms
 
@@ -166,7 +166,7 @@ However, during simulation, only the target predictor is assigned the assumed ef
 `Trials` is the number of sampled individuals or necropsies for each species. The script keeps the observed trial counts fixed. This preserves the real sampling structure of the dataset.
 
 ### Mu
-`mu` is the expected cancer probability for each species. The script calculates `mu` from the linear predictor:
+`mu` is the expected neoplasia probability for each species. The script calculates `mu` from the linear predictor:
 ```r
 eta_mu = intercept + beta_mass * mass_s + phylogenetic effect
 mu = plogis(eta_mu)
@@ -296,7 +296,7 @@ With five effect sizes, this gives:
 5 × 100 = 500 simulated model refits
 ```
 
-### Step 10. Build the expected cancer probability
+### Step 10. Build the expected neoplasia probability
 For each simulation, the script starts with the real model intercept:
 ```r
 eta_mu <- intercept_real
@@ -323,7 +323,7 @@ zi_prob <- plogis(eta_zi)
 This gives the probability that each species belongs to the excess zero process.
 
 ### Step 12. Simulate new cancer counts
-The script simulates new cancer counts using:
+The script simulates new neoplasia counts using:
 ```r
 simulate_zibb_counts(
   trials = Trials,

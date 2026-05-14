@@ -116,7 +116,7 @@ The main script is:
 Bayesian_Assurance_Analysis.R
 ```
 
-This script is currently configured to run assurance for body mass only.
+## This script is currently configured to run assurance for body mass only.
 
 ## Effect sizes tested
 The script tests a grid of assumed true body mass beta values:

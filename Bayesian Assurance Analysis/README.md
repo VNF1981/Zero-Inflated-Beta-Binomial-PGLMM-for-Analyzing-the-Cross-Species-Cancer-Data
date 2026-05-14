@@ -516,6 +516,22 @@ The script records failed simulations as missing and reports:
 ```text
 n_sim_valid
 ```
+## Results from the body mass assurance analysis
+
+The assurance analysis was run for body mass effects on neoplasia using the all three predictor model. The tested beta values ranged from very small to large positive effects. Assurance increased strongly with the assumed effect size:
+
+```text
+assumed_beta    assumed_OR    assurance
+0.10            1.11          0.09
+0.30            1.35          0.63
+0.50            1.65          0.95
+0.70            2.01          1.00
+0.90            2.46          1.00
+```
+
+These results show that the current dataset and model structure have low ability to reliably detect a very small body mass effect. For beta = 0.1, only 9% of simulations reached strong posterior support. Detection improved for beta = 0.3, where assurance was 63%, and became strong at beta = 0.5, where assurance reached 95%. For larger effects, beta = 0.7 and beta = 0.9, the model detected the positive body mass effect in all valid simulations.
+
+These results should be interpreted as effect size dependent. There is not one single assurance value for the whole model. Instead, assurance describes how reliably the current dataset and model can detect a specific assumed true effect size. In the empirical neoplasia model, the estimated body mass coefficient was approximately 0.27, which is closest to the simulated beta = 0.3 scenario. Therefore, the observed body mass effect falls in a range where assurance is moderate rather than high. This suggests that the positive empirical association is meaningful, but effects of this size are near the lower range of what the current data structure can detect consistently.
 
 ## Summary
 This script performs a Bayesian assurance analysis for body mass effects in cross species cancer data. It varies the assumed true body mass beta, simulates datasets under the fitted model structure, refits the model to each simulated dataset, and estimates how often the model detects the effect with high posterior probability. The main output is an assurance value for each assumed effect size.

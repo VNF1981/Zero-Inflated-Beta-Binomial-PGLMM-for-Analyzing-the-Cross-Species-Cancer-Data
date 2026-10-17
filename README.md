@@ -41,7 +41,7 @@ The CSV, tree, and aliases are example/reference inputs and must be included whe
 - R with packages **`ape`**, **`rstan` (≥ 2.26)**, and **`writexl`**.
 - A working C++ toolchain compatible with `rstan`/Stan (**Rtools** on supported Windows installations; suitable C++ compiler on Linux).
 - Enough RAM and compute time for Bayesian sampling. Runtime can be substantial, especially with large phylogenetic trees.
-- I recommend running analyses on HPC clusters like SOL or Monsoon rather than local machines, especially when analyzing large numbers of species and multiple life-history traits.
+- **I recommend running analyses on HPC clusters like SOL or Monsoon rather than local machines, especially when analyzing large numbers of species and multiple life-history traits.**
 
 Install the R packages (after setting up the compiler/toolchain):
 

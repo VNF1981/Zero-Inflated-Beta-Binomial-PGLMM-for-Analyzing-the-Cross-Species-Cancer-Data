@@ -18,7 +18,7 @@ This version replaces the earlier `brms` implementation with **custom Stan model
 | Regression | Automatically handles one or more user-selected predictors |
 | Results | CSV summaries, an Excel model summary, fitted model object, and run metadata |
 
-**Overdispersion in brief.** In a conventional binomial model, the count variance is determined by the success probability and number of trials. The beta-binomial permits additional variation. Here, **ρ ≈ 0** approaches the binomial limit; larger ρ means greater extra-binomial variation. The previous implementation put a half-Normal prior on **φ (precision)**; the new implementation places a **Beta(1, 9)** prior directly on **ρ**, favoring modest overdispersion while allowing larger values when supported by data. These **are different priors**, not merely a change of notation. The later sampling reparameterization is a separate computational improvement.
+**Overdispersion in brief.** In a conventional binomial model, the count variance is determined by the success probability and number of trials. The beta-binomial permits additional variation. Here, **ρ ≈ 0** approaches the binomial limit; larger ρ means greater extra-binomial variation. The previous implementation put a half-Normal prior on **φ (precision)**; the new implementation places a **Beta(1, 9)** prior directly on **ρ**, favoring modest overdispersion while allowing larger values when supported by data. So these **are different priors**, not merely a change of notation. The later sampling reparameterization is a separate computational improvement.
 
 ## Repository contents
 

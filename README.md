@@ -166,7 +166,7 @@ The original cross-species cancer and life-history dataset required name reconci
 
 The mapping is recorded in `species_aliases.csv` with columns **`data_species`** and **`tree_species`**. Keep the file alongside the data and tree to reproduce the corrected alignments. The workflow also checks for duplicate or invalid scientific names and prunes the supplied tree to the relevant species.
 
-These taxonomic corrections are documented here for researchers using the original dataset from Zach et al.; to incorporate the additional matched species without a separate alias file, the corresponding species names must be reconciled directly in either the cancer/LHT dataset or the phylogenetic tree so that they match exactly.
+These taxonomic corrections are documented here for those using the original dataset from the big paper; to incorporate the additional matched species without a separate alias file, the corresponding species names must be reconciled directly in either the cancer/LHT dataset or the phylogenetic tree so that they match exactly.
 
 ## Outputs
 

@@ -1,4 +1,4 @@
-# ZiBBPGLMM: Zero-Inflated Beta-Binomial Phylogenetic Generalized Linear Mixed Models
+# ZiBBPGLMM V2: Joint Zero-Inflated Beta-Binomial Phylogenetic Generalized Linear Mixed Models
 
 **An R + Stan workflow for modeling cross-species cancer prevalence while accounting for varying necropsy sample sizes, excess zero counts, extra-binomial variation, and shared evolutionary ancestry.**
 

@@ -181,24 +181,6 @@ Each execution creates a **separate results subfolder** inside `output_dir`, nam
 | `fit.rds` | Complete saved Stan fit for further analysis. |
 | `run_settings.rds` | Selected user settings and Stan-file checksum. |
 
-In the Excel report, **Regression effects** includes log-odds coefficients and their exponentiated odds ratios. **Zero inflation** provides the excess-zero intercept, the sampling-effort coefficient, and the estimated excess-zero probability at average standardized log-necropsy effort. The report does not estimate a separate zero-inflation coefficient for each life-history trait: **necropsy effort is the zero-inflation predictor**.
-
-**The public script fits and summarizes the selected model. It does not automatically produce corrected integrated leave-one-species-out (LOSO) comparisons, exact refits, or the complete production manuscript tables.** Low effective sample size or other sampler warnings require additional sampling and assessment before scientific interpretation.
-
-## Short functionality test
-
-Before a full fit, users may temporarily select smaller values, for example:
-
-```r
-chains  <- 2L
-warmup  <- 200L
-samples <- 400L
-```
-
-This is a **software execution check only**, not sufficient for reliable inference. For substantive work, use adequate sampling and inspect the resulting diagnostics.
-
 ## Data source and reproducibility
 
 This workflow extends the cross-species cancer data published by **Compton et al. (2025)** and incorporates later taxonomic reconciliation and curated life-history information. Credit the original data creators and cite the relevant dataset/publication when reusing the example data. Source: [Compton et al. (2025)](https://aacrjournals.org/cancerdiscovery/article/15/1/227/750844/Cancer-Prevalence-across-VertebratesCancer-across).
-
-Older implementations and historical analyses should remain in a clearly labeled archive; this README documents only the **October 2026 custom-Stan implementation**. The repository's licensing and citation information should be maintained in their own files if applicable.

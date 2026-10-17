@@ -156,6 +156,7 @@ The original cross-species cancer and life-history dataset required name reconci
 | Species records in original input dataset | 327 |
 | Tips in the supplied phylogenetic tree | 304 |
 | Matches after name standardization | 293 |
+| Present in the Cancer Discovery paper | 292 |
 | Additional matches recovered from nine aliases | 9 |
 | **Total matched species** | **302** |
 | Data species without a tree match | 25 |
